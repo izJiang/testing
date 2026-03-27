@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>江尔琦 · Portfolio</title>
+<style>
+:root{
+  --ink:#0c0c14;
+  --surface:#111118;
+  --card:#16161f;
+  --line:rgba(255,255,255,0.06);
+  --rose:#ff3d6e;
+  --violet:#9b5de5;
+  --gold:#f4c542;
+  --white:#f5f5f7;
+  --muted:#7c7c96;
+  --r-text:#e8e8f0;
+  --ease:cubic-bezier(.4,0,.2,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'PingFang SC','SF Pro Display','Inter',sans-serif;
+  background:var(--ink);
+  color:var(--white);
+  overflow-x:hidden;
+  cursor:none;
+}
+
+/* ── Custom cursor ── */
+#cursor{
+  position:fixed;width:10px;height:10px;
+  background:var(--rose);border-radius:50%;
+  pointer-events:none;z-index:9999;
+  transform:translate(-50%,-50%);
+  transition:transform .1s var(--ease),width .25s var(--ease),height .25s var(--ease),opacity .2s;
+  mix-blend-mode:screen;
+}
+#cursor-trail{
+  position:fixed;width:32px;height:32px;
+  border:1px solid rgba(255,61,110,0.45);
+  border-radius:50%;pointer-events:none;z-index:9998;
+  transform:translate(-50%,-50%);
+  transition:transform .18s var(--ease),width .3s,height .3s,border-color .3s;
+}
+body.hovering #cursor{width:6px;height:6px;opacity:.6}
+body.hovering #cursor-trail{width:52px;height:52px;border-color:rgba(155,93,229,.6)}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:22px 60px;
+  background:linear-gradient(to bottom,rgba(12,12,20,.95) 0%,transparent 100%);
+  backdrop-filter:blur(12px);
+}
+.nav-logo{
+  font-size:18px;font-weight:700;letter-spacing:-.3px;
+  background:linear-gradient(90deg,var(--white),var(--muted));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.nav-links{display:flex;gap:36px;list-style:none}
+.nav-links a{
+  font-size:13px;color:var(--muted);text-decoration:none;
+  letter-spacing:.5px;text-transform:uppercase;
+  transition:color .2s;
+}
+.nav-links a:hover{color:var(--white)}
+
+/* ── HERO ── */
+#hero{
+  min-height:100vh;display:flex;flex-direction:column;
+  justify-content:center;padding:0 60px;
+  position:relative;overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;z-index:0;
+  background:radial-gradient(ellipse 70% 60% at 15% 50%,rgba(255,61,110,.06) 0%,transparent 70%),
+             radial-gradient(ellipse 50% 50% at 85% 40%,rgba(155,93,229,.07) 0%,transparent 65%);
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:80px 80px;
+  -webkit-mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 100%);
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 100%);
+}
+
+.hero-eyebrow{
+  position:relative;z-index:1;
+  font-size:12px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--rose);font-weight:600;margin-bottom:24px;
+  opacity:0;transform:translateY(20px);
+  animation:rise .8s .2s var(--ease) forwards;
+}
+.hero-name{
+  position:relative;z-index:1;
+  font-size:clamp(56px,8vw,96px);font-weight:800;
+  letter-spacing:-3px;line-height:1;
+  opacity:0;transform:translateY(30px);
+  animation:rise .9s .35s var(--ease) forwards;
+}
+.hero-name em{
+  font-style:normal;
+  background:linear-gradient(135deg,var(--rose) 0%,var(--violet) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero-sub{
+  position:relative;z-index:1;
+  margin-top:24px;font-size:18px;color:var(--muted);
+  font-weight:300;letter-spacing:.3px;line-height:1.7;
+  max-width:520px;
+  opacity:0;transform:translateY(24px);
+  animation:rise .9s .5s var(--ease) forwards;
+}
+.hero-sub strong{color:var(--r-text);font-weight:500}
+.hero-chips{
+  position:relative;z-index:1;
+  margin-top:32px;display:flex;flex-wrap:wrap;gap:10px;
+  opacity:0;transform:translateY(24px);
+  animation:rise .9s .65s var(--ease) forwards;
+}
+.chip{
+  padding:7px 16px;border-radius:999px;
+  font-size:12px;letter-spacing:.3px;
+  border:1px solid var(--line);background:rgba(255,255,255,.04);
+  color:var(--muted);transition:all .25s var(--ease);
+}
+.chip:hover{border-color:var(--rose);color:var(--white);background:rgba(255,61,110,.08)}
+.chip.accent{
+  background:linear-gradient(135deg,rgba(255,61,110,.15),rgba(155,93,229,.15));
+  border-color:rgba(255,61,110,.3);color:var(--r-text);
+}
+.hero-cta{
+  position:relative;z-index:1;
+  margin-top:40px;display:flex;gap:14px;
+  opacity:0;transform:translateY(24px);
+  animation:rise .9s .8s var(--ease) forwards;
+}
+.btn-primary{
+  padding:12px 28px;border-radius:8px;
+  background:linear-gradient(135deg,var(--rose),var(--violet));
+  color:#fff;font-size:14px;font-weight:600;
+  border:none;cursor:none;
+  transition:transform .2s,box-shadow .2s;
+  box-shadow:0 0 30px rgba(255,61,110,.2);
+  text-decoration:none;display:inline-block;
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 40px rgba(255,61,110,.35)}
+.btn-ghost{
+  padding:12px 28px;border-radius:8px;
+  background:transparent;color:var(--muted);
+  font-size:14px;border:1px solid var(--line);
+  cursor:none;transition:all .2s;text-decoration:none;display:inline-block;
+}
+.btn-ghost:hover{border-color:rgba(255,255,255,.2);color:var(--white)}
+
+/* hero scroll indicator */
+.scroll-hint{
+  position:absolute;bottom:36px;left:60px;z-index:1;
+  display:flex;align-items:center;gap:10px;
+  font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;
+  opacity:0;animation:rise .8s 1.2s var(--ease) forwards;
+}
+.scroll-line{
+  width:40px;height:1px;background:linear-gradient(90deg,var(--rose),transparent);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+
+/* ── SECTION WRAPPER ── */
+.section{padding:120px 60px;position:relative}
+.section-tag{
+  font-size:11px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--rose);margin-bottom:16px;font-weight:600;
+}
+.section-title{
+  font-size:clamp(32px,4vw,52px);font-weight:800;
+  letter-spacing:-1.5px;line-height:1.1;margin-bottom:12px;
+}
+.section-sub{
+  font-size:16px;color:var(--muted);max-width:500px;
+  line-height:1.7;margin-bottom:60px;
+}
+
+/* ── NUMBERS SECTION ── */
+#numbers{
+  background:var(--surface);
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+}
+.numbers-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:0;
+}
+.num-item{
+  padding:60px 40px;border-right:1px solid var(--line);
+  position:relative;overflow:hidden;
+  transition:background .3s;
+}
+.num-item:last-child{border-right:none}
+.num-item::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,61,110,.05),rgba(155,93,229,.05));
+  opacity:0;transition:opacity .3s;
+}
+.num-item:hover::before{opacity:1}
+.num-big{
+  font-size:clamp(44px,5vw,72px);font-weight:800;
+  letter-spacing:-2px;line-height:1;
+  background:linear-gradient(135deg,var(--rose),var(--violet));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.num-label{
+  margin-top:12px;font-size:14px;color:var(--muted);
+  line-height:1.5;
+}
+.num-note{
+  margin-top:6px;font-size:12px;color:rgba(124,124,150,.6);
+}
+
+/* ── EXPERIENCE ── */
+.exp-wrapper{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+
+.exp-block{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:20px;padding:36px;position:relative;overflow:hidden;
+  transition:border-color .3s,transform .3s;cursor:default;
+}
+.exp-block:hover{border-color:rgba(255,61,110,.25);transform:translateY(-4px)}
+.exp-block.featured{
+  grid-column:span 2;
+  background:linear-gradient(135deg,rgba(255,61,110,.06),rgba(155,93,229,.06));
+  border-color:rgba(255,61,110,.2);
+}
+.exp-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:11px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--rose);background:rgba(255,61,110,.1);
+  border:1px solid rgba(255,61,110,.2);border-radius:999px;
+  padding:4px 12px;margin-bottom:20px;
+}
+.exp-co{font-size:22px;font-weight:700;color:var(--white);margin-bottom:4px}
+.exp-role{font-size:13px;color:var(--rose);font-weight:500;margin-bottom:4px}
+.exp-date{font-size:12px;color:var(--muted);margin-bottom:20px}
+.exp-items{list-style:none;display:flex;flex-direction:column;gap:10px}
+.exp-items li{
+  font-size:14px;color:var(--muted);padding-left:18px;
+  position:relative;line-height:1.65;
+}
+.exp-items li::before{
+  content:'';position:absolute;left:4px;top:9px;
+  width:5px;height:5px;border-radius:50%;
+  background:linear-gradient(135deg,var(--rose),var(--violet));
+}
+.exp-items li strong{color:var(--r-text);font-weight:500}
+
+.exp-metrics{
+  display:flex;gap:24px;margin-top:24px;
+  padding-top:24px;border-top:1px solid var(--line);
+}
+.exp-metric{text-align:center}
+.exp-metric .v{
+  font-size:24px;font-weight:700;
+  background:linear-gradient(135deg,var(--rose),var(--violet));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.exp-metric .l{font-size:11px;color:var(--muted);margin-top:3px}
+
+/* ── EDUCATION ── */
+.edu-row{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.edu-card{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:20px;padding:36px;
+  transition:border-color .3s,transform .3s;
+}
+.edu-card:hover{border-color:rgba(155,93,229,.3);transform:translateY(-3px)}
+.edu-flag{font-size:36px;margin-bottom:16px}
+.edu-school{font-size:20px;font-weight:700;margin-bottom:4px}
+.edu-major{font-size:13px;color:var(--muted);margin-bottom:16px}
+.edu-tags-row{display:flex;flex-wrap:wrap;gap:6px}
+.e-tag{
+  font-size:11px;padding:3px 10px;border-radius:6px;
+  background:rgba(155,93,229,.12);border:1px solid rgba(155,93,229,.25);
+  color:#b49fe8;
+}
+.edu-yr{
+  font-size:12px;color:var(--muted);
+  margin-top:14px;padding-top:14px;border-top:1px solid var(--line);
+}
+
+/* ── IP SECTION ── */
+#ip-section{background:var(--surface);border-top:1px solid var(--line)}
+.ip-hero-card{
+  background:var(--card);border:1px solid rgba(255,61,110,.15);
+  border-radius:24px;padding:52px;
+  display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center;
+  position:relative;overflow:hidden;
+}
+.ip-hero-card::before{
+  content:'';position:absolute;
+  top:-80px;right:-80px;
+  width:280px;height:280px;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(255,61,110,.08),transparent 70%);
+}
+.ip-title{font-size:28px;font-weight:700;margin-bottom:12px}
+.ip-desc{font-size:15px;color:var(--muted);line-height:1.7;max-width:480px}
+.ip-numbers{
+  display:flex;flex-direction:column;gap:20px;flex-shrink:0;
+}
+.ip-num{text-align:right}
+.ip-num .v{
+  font-size:40px;font-weight:800;letter-spacing:-1px;
+  background:linear-gradient(135deg,var(--rose),var(--violet));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.ip-num .l{font-size:12px;color:var(--muted);margin-top:2px}
+
+/* ── AWARDS ── */
+.awards-row{display:flex;flex-direction:column;gap:12px}
+.award-card{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:16px;padding:24px 28px;
+  display:flex;align-items:center;gap:20px;
+  transition:border-color .25s,transform .25s;
+}
+.award-card:hover{border-color:rgba(244,197,66,.25);transform:translateX(6px)}
+.award-emo{font-size:28px;width:44px;text-align:center;flex-shrink:0}
+.award-name{font-size:15px;font-weight:600;margin-bottom:4px}
+.award-sub{font-size:13px;color:var(--muted)}
+.award-year{
+  margin-left:auto;font-size:12px;color:var(--muted);
+  flex-shrink:0;padding:4px 12px;
+  background:rgba(255,255,255,.04);border-radius:999px;
+  border:1px solid var(--line);
+}
+
+/* ── SKILLS ── */
+.skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.skill-cat{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:16px;padding:24px;
+  transition:border-color .2s;
+}
+.skill-cat:hover{border-color:rgba(155,93,229,.25)}
+.skill-cat-label{
+  font-size:11px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:14px;font-weight:600;
+}
+.skill-pills{display:flex;flex-wrap:wrap;gap:6px}
+.sp{
+  font-size:12px;padding:4px 10px;border-radius:6px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);
+  color:var(--r-text);transition:all .2s;
+}
+.sp:hover{background:rgba(155,93,229,.15);border-color:rgba(155,93,229,.3);color:#c4a8f5}
+
+/* ── CONTACT ── */
+#contact{
+  text-align:center;
+  background:linear-gradient(to bottom,var(--ink),rgba(155,93,229,.04));
+}
+.contact-headline{
+  font-size:clamp(36px,5vw,64px);font-weight:800;
+  letter-spacing:-2px;line-height:1.1;margin-bottom:20px;
+}
+.contact-headline span{
+  background:linear-gradient(135deg,var(--rose),var(--violet));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.contact-sub{font-size:17px;color:var(--muted);margin-bottom:40px}
+.contact-row{
+  display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:60px;
+}
+.contact-pill{
+  display:flex;align-items:center;gap:8px;
+  padding:12px 20px;border-radius:12px;
+  background:var(--card);border:1px solid var(--line);
+  font-size:13px;color:var(--muted);text-decoration:none;
+  transition:all .25s;
+}
+.contact-pill:hover{border-color:var(--rose);color:var(--white);transform:translateY(-2px)}
+
+/* ── FOOTER ── */
+footer{
+  padding:30px 60px;border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.footer-left{font-size:12px;color:var(--muted)}
+.footer-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--rose);animation:blink 2s infinite;
+  display:inline-block;margin-right:6px;vertical-align:middle;
+}
+@keyframes blink{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* ── DIVIDER ── */
+.divider{
+  height:1px;background:linear-gradient(90deg,transparent,var(--line) 20%,var(--line) 80%,transparent);
+  margin:0 60px;
+}
+
+/* ── REVEAL animation ── */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .75s var(--ease),transform .75s var(--ease)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
+.reveal-delay-4{transition-delay:.4s}
+
+@keyframes rise{
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ── PROGRESS BAR ── */
+#progress{
+  position:fixed;top:0;left:0;right:0;height:2px;z-index:200;
+  background:linear-gradient(90deg,var(--rose),var(--violet));
+  transform-origin:left;transform:scaleX(0);transition:transform .1s;
+}
+
+/* ── HOVER glow ── */
+.glow-hover{transition:box-shadow .3s}
+.glow-hover:hover{box-shadow:0 0 40px rgba(255,61,110,.15),0 20px 60px rgba(0,0,0,.4)}
+
+/* ── Timeline connector ── */
+.tl-dot{
+  position:absolute;left:-1px;top:36px;
+  width:9px;height:9px;border-radius:50%;
+  background:linear-gradient(135deg,var(--rose),var(--violet));
+  box-shadow:0 0 12px rgba(255,61,110,.5);
+}
+
+/* ── Responsive ── */
+@media(max-width:768px){
+  nav{padding:20px 24px}
+  .section{padding:80px 24px}
+  #hero{padding:0 24px}
+  .numbers-grid{grid-template-columns:repeat(2,1fr)}
+  .num-item:nth-child(2){border-right:none}
+  .num-item:nth-child(3){border-top:1px solid var(--line)}
+  .exp-wrapper,.edu-row,.skills-grid{grid-template-columns:1fr}
+  .exp-block.featured{grid-column:span 1}
+  .ip-hero-card{grid-template-columns:1fr}
+  .ip-numbers{flex-direction:row;flex-wrap:wrap}
+  .ip-num{text-align:left}
+  footer{flex-direction:column;gap:12px;padding:24px}
+  .contact-headline{font-size:36px}
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-trail"></div>
+<div id="progress"></div>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="nav-logo">江尔琦</div>
+  <ul class="nav-links">
+    <li><a href="#experience">经历</a></li>
+    <li><a href="#education">教育</a></li>
+    <li><a href="#ip">IP</a></li>
+    <li><a href="#awards">荣誉</a></li>
+    <li><a href="#contact">联系</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-eyebrow">商业化运营 · 数据分析 · 内容营销</div>
+  <h1 class="hero-name"><em>江尔琦</em></h1>
+  <p class="hero-sub">
+    深耕<strong>小红书商业化</strong>核心岗位半年，从一线投放到战略复盘，<br>
+    用数据说话，用内容破圈。<strong>港大研究生</strong>准入学 · 广州。
+  </p>
+  <div class="hero-chips">
+    <span class="chip accent">🔴 小红书商业化实习生</span>
+    <span class="chip accent">🇭🇰 港大市场营销 硕士</span>
+    <span class="chip">数据驱动运营</span>
+    <span class="chip">广告投放分析</span>
+    <span class="chip">内容策略</span>
+    <span class="chip">AI工具应用</span>
+  </div>
+  <div class="hero-cta">
+    <a href="#experience" class="btn-primary">查看经历</a>
+    <a href="#contact" class="btn-ghost">联系我</a>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    向下滑动
+  </div>
+</section>
+
+<!-- ── NUMBERS ── -->
+<section id="numbers">
+  <div class="numbers-grid">
+    <div class="num-item reveal">
+      <div class="num-big" data-target="100">0</div>
+      <div class="num-label">客户群对接数量</div>
+      <div class="num-note">小红书商业化 · 2025</div>
+    </div>
+    <div class="num-item reveal reveal-delay-1">
+      <div class="num-big" data-target="200000" data-unit="w+">20</div>
+      <div class="num-label">个人账号浏览量</div>
+      <div class="num-note">小红书博主 · 冷启动一个月</div>
+    </div>
+    <div class="num-item reveal reveal-delay-2">
+      <div class="num-big" data-target="20" data-suffix="%↑">20%↑</div>
+      <div class="num-label">协助提升订单增长</div>
+      <div class="num-note">美的集团 · 20+ 运营中心</div>
+    </div>
+    <div class="num-item reveal reveal-delay-3">
+      <div class="num-big">4.6</div>
+      <div class="num-label">GPA 绩点（满分5）</div>
+      <div class="num-note">华南农业大学</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── EXPERIENCE ── -->
+<section id="experience" class="section">
+  <div class="section-tag reveal">实习经历</div>
+  <h2 class="section-title reveal">在最好的地方<br>做真实的事</h2>
+  <p class="section-sub reveal">四段横跨互联网大厂、广告集团、金融机构的实习，每一段都留下量化的印记。</p>
+
+  <div class="exp-wrapper">
+
+    <!-- 小红书 featured -->
+    <div class="exp-block featured glow-hover reveal">
+      <div class="exp-badge">⭐ 核心经历</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start">
+        <div>
+          <div class="exp-co">📕 小红书</div>
+          <div class="exp-role">商业化实习生</div>
+          <div class="exp-date">2025.07 — 2025.12 · 6个月 · CBD → 平台专家</div>
+          <ul class="exp-items" style="margin-top:16px">
+            <li><strong>客户对接</strong>：对接 100+ 客户群，协助 KA 排查广告投放卡点，参与 KOS 流程与 TtoT 会议</li>
+            <li><strong>投放复盘</strong>：为 10+ 家教育企业产出月度/年度复盘，助力年框签订与下年策略制定</li>
+            <li><strong>行业报告</strong>：产出少儿教育视频笔记方法论，协助撰写 2026 小红书行业通案</li>
+            <li><strong>产品共建</strong>：参与构建少儿教育 NPS 模型与行业灵犀基建数据工作</li>
+            <li><strong>案例策划</strong>：深度产出 3 例红书优秀案例 PPT；参与少儿行业峰会案例与 Showcase OnePager 策划</li>
+          </ul>
+        </div>
+        <div>
+          <div class="exp-items">
+            <li style="padding-left:0;font-size:13px;color:var(--muted);line-height:1.7">深度参与小红书商业化两大核心角色：<strong>CBD（客户业务发展）</strong>与<strong>平台专家</strong>，覆盖从广告运营排查到行业策略输出的完整链路。是小红书商业化岗位候选人中最稀缺的内部视角。</li>
+          </div>
+          <div class="exp-metrics">
+            <div class="exp-metric">
+              <div class="v">100+</div>
+              <div class="l">客户群</div>
+            </div>
+            <div class="exp-metric">
+              <div class="v">10+</div>
+              <div class="l">企业复盘</div>
+            </div>
+            <div class="exp-metric">
+              <div class="v">20+</div>
+              <div class="l">分析文档</div>
+            </div>
+            <div class="exp-metric">
+              <div class="v">3</div>
+              <div class="l">优秀案例</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 美的 -->
+    <div class="exp-block glow-hover reveal reveal-delay-1">
+      <div class="exp-co">🔵 美的集团</div>
+      <div class="exp-role">数字化营销实习生</div>
+      <div class="exp-date">2024.12 — 2025.03 · 4个月</div>
+      <ul class="exp-items" style="margin-top:16px">
+        <li><strong>看板搭建</strong>：处理 10,000+ 行数据，独立完成可视化看板，下达全国 20+ 运营中心</li>
+        <li><strong>数据洞察</strong>：下钻分析美团到家 KPI 指标，挖掘建店密度等关键字段，带动订单增长 <strong>近 20%</strong></li>
+        <li><strong>留资分析</strong>：BI 工具搭建实时看板，追踪表单转化率、留资成本等全链路指标</li>
+      </ul>
+      <div class="exp-metrics">
+        <div class="exp-metric"><div class="v">20%↑</div><div class="l">订单增长</div></div>
+        <div class="exp-metric"><div class="v">20+</div><div class="l">运营中心</div></div>
+      </div>
+    </div>
+
+    <!-- 阳狮 -->
+    <div class="exp-block glow-hover reveal reveal-delay-2">
+      <div class="exp-co">🟠 阳狮集团 Publicis</div>
+      <div class="exp-role">广告投放实习生</div>
+      <div class="exp-date">2024.06 — 2024.09 · 4个月</div>
+      <ul class="exp-items" style="margin-top:16px">
+        <li><strong>广告监控</strong>：负责美素佳儿（美赞臣旗下母婴品牌）京东平台广告投放全链路数据监控</li>
+        <li><strong>ROI 提升</strong>：精细化输出投放优化策略，协助 <strong>广告消耗 ROI 提升 5%</strong></li>
+        <li><strong>人群测试</strong>：参与数坊 A/B test 项目，洞察目标人群，为新品制定精准投放策略</li>
+      </ul>
+      <div class="exp-metrics">
+        <div class="exp-metric"><div class="v">5%↑</div><div class="l">广告 ROI</div></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── EDUCATION ── -->
+<section id="education" class="section">
+  <div class="section-tag reveal">教育背景</div>
+  <h2 class="section-title reveal">学历，是信用背书</h2>
+  <p class="section-sub reveal">从广州到香港，从会计到营销，跨学科的知识体系构建更立体的商业视野。</p>
+
+  <div class="edu-row">
+    <div class="edu-card glow-hover reveal">
+      <div class="edu-flag">🇭🇰</div>
+      <div class="edu-school">香港大学 HKU</div>
+      <div class="edu-major">市场营销专业 · 硕士研究生 · 全英授课</div>
+      <div class="edu-tags-row">
+        <span class="e-tag">QS 全球 Top 20</span>
+        <span class="e-tag">雅思 6.5</span>
+        <span class="e-tag">2026.09 入学</span>
+      </div>
+      <div class="edu-yr">2026.09 — 2027.12</div>
+    </div>
+    <div class="edu-card glow-hover reveal reveal-delay-1">
+      <div class="edu-flag">🌿</div>
+      <div class="edu-school">华南农业大学</div>
+      <div class="edu-major">会计学 ACCA 专业 · 本科</div>
+      <div class="edu-tags-row">
+        <span class="e-tag">GPA 4.6/5</span>
+        <span class="e-tag">ACCA 6门已过</span>
+        <span class="e-tag">CET-4 · CET-6</span>
+      </div>
+      <div class="edu-yr">2022.09 — 2026.06</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── IP ── -->
+<section id="ip" id="ip-section" class="section" style="background:var(--surface)">
+  <div class="section-tag reveal">个人 IP</div>
+  <h2 class="section-title reveal">从 0 到 20w+<br>一个月</h2>
+  <p class="section-sub reveal">冷启动小红书个人账号，独立完成选题、拍摄、文案策划，验证了内容方法论的可行性。</p>
+
+  <div class="ip-hero-card glow-hover reveal">
+    <div>
+      <div class="ip-title">📱 小红书个人博主</div>
+      <p class="ip-desc">
+        从 0 开始独立策划账号人设，差异化定位，掌握内容冷启动方法论。<br><br>
+        真正做过账号，才知道平台逻辑。这是商业化岗位的稀缺认知优势。
+      </p>
+    </div>
+    <div class="ip-numbers">
+      <div class="ip-num">
+        <div class="v">20w+</div>
+        <div class="l">浏览量（1个月内）</div>
+      </div>
+      <div class="ip-num">
+        <div class="v">6000+</div>
+        <div class="l">粉丝</div>
+      </div>
+      <div class="ip-num">
+        <div class="v">37%</div>
+        <div class="l">笔记点赞率超 3K+</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── AWARDS ── -->
+<section id="awards" class="section">
+  <div class="section-tag reveal">荣誉 & 成果</div>
+  <h2 class="section-title reveal">拿过的奖<br>不会说谎</h2>
+  <p class="section-sub reveal">学术、竞赛、专业认证多线并进，印证综合竞争力。</p>
+
+  <div class="awards-row">
+    <div class="award-card reveal">
+      <div class="award-emo">🥇</div>
+      <div>
+        <div class="award-name">挑战杯 · 创新创业大赛省级金奖</div>
+        <div class="award-sub">广东省级别最高荣誉之一，全国大学生创新竞赛标杆</div>
+      </div>
+      <div class="award-year">2024</div>
+    </div>
+    <div class="award-card reveal reveal-delay-1">
+      <div class="award-emo">📄</div>
+      <div>
+        <div class="award-name">EI 源刊学术论文发表（IJHSES）</div>
+        <div class="award-sub">Engineering Index 检索期刊，全英文一作，独立科研能力的有力佐证</div>
+      </div>
+      <div class="award-year">2025</div>
+    </div>
+    <div class="award-card reveal reveal-delay-2">
+      <div class="award-emo">✍️</div>
+      <div>
+        <div class="award-name">全国大学生文学比赛 · 一等奖</div>
+        <div class="award-sub">文字表达力经过国家级认可，内容创作的底层硬实力</div>
+      </div>
+      <div class="award-year">2023</div>
+    </div>
+    <div class="award-card reveal reveal-delay-3">
+      <div class="award-emo">📊</div>
+      <div>
+        <div class="award-name">ACCA 国际特许会计师 · 6 门通过</div>
+        <div class="award-sub">全球认可的财务专业资质，数据分析背后的财务底层逻辑</div>
+      </div>
+      <div class="award-year">在读</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── SKILLS ── -->
+<section class="section">
+  <div class="section-tag reveal">技能</div>
+  <h2 class="section-title reveal">工具箱</h2>
+
+  <div class="skills-grid">
+    <div class="skill-cat reveal">
+      <div class="skill-cat-label">数据 & 分析</div>
+      <div class="skill-pills">
+        <span class="sp">SQL</span><span class="sp">Excel</span>
+        <span class="sp">BI 工具</span><span class="sp">Wind</span>
+        <span class="sp">数据可视化</span><span class="sp">A/B Test</span>
+      </div>
+    </div>
+    <div class="skill-cat reveal reveal-delay-1">
+      <div class="skill-cat-label">营销 & 投放</div>
+      <div class="skill-pills">
+        <span class="sp">小红书商业化</span><span class="sp">广告投放</span>
+        <span class="sp">ROI 分析</span><span class="sp">KA 运营</span>
+        <span class="sp">行业报告</span>
+      </div>
+    </div>
+    <div class="skill-cat reveal reveal-delay-2">
+      <div class="skill-cat-label">内容 & 表达</div>
+      <div class="skill-pills">
+        <span class="sp">内容策划</span><span class="sp">PPT 制作</span>
+        <span class="sp">报告撰写</span><span class="sp">AI 工具</span>
+        <span class="sp">主持</span><span class="sp">写作</span>
+      </div>
+    </div>
+    <div class="skill-cat reveal reveal-delay-1">
+      <div class="skill-cat-label">语言</div>
+      <div class="skill-pills">
+        <span class="sp">中文（母语）</span>
+        <span class="sp">英语（雅思 6.5）</span>
+        <span class="sp">CET-4 · CET-6</span>
+      </div>
+    </div>
+    <div class="skill-cat reveal reveal-delay-2">
+      <div class="skill-cat-label">财务 & 商业</div>
+      <div class="skill-pills">
+        <span class="sp">ACCA</span><span class="sp">财务分析</span>
+        <span class="sp">商业 Modeling</span>
+      </div>
+    </div>
+    <div class="skill-cat reveal reveal-delay-3">
+      <div class="skill-cat-label">兴趣 & 特长</div>
+      <div class="skill-pills">
+        <span class="sp">🎤 主持（5段校级）</span>
+        <span class="sp">🎵 古筝国家9级</span>
+        <span class="sp">✍️ 写作</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section id="contact" class="section">
+  <div class="section-tag reveal" style="text-align:center">联系方式</div>
+  <h2 class="contact-headline reveal">准备好<span>开始合作</span>了吗？</h2>
+  <p class="contact-sub reveal">期待下一段精彩的旅程 🚀</p>
+  <div class="contact-row reveal">
+    <a class="contact-pill" href="tel:13927006893">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.68A2 2 0 012 .97h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+      13927006893
+    </a>
+    <a class="contact-pill" href="mailto:17827082812@163.com">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      17827082812@163.com
+    </a>
+    <span class="contact-pill">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      广东 · 广州
+    </span>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-left">
+    <span class="footer-dot"></span>
+    江尔琦 · Portfolio 2025 · 香港大学 &amp; 华南农业大学
+  </div>
+  <div style="font-size:12px;color:var(--muted)">Crafted with precision ✦</div>
+</footer>
+
+<script>
+// ── Cursor ──
+const cursor = document.getElementById('cursor');
+const trail  = document.getElementById('cursor-trail');
+let mx=0,my=0,tx=0,ty=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX; my=e.clientY;
+  cursor.style.left=mx+'px'; cursor.style.top=my+'px';
+});
+function animTrail(){
+  tx+=(mx-tx)*0.12; ty+=(my-ty)*0.12;
+  trail.style.left=tx+'px'; trail.style.top=ty+'px';
+  requestAnimationFrame(animTrail);
+}
+animTrail();
+
+const hoverEls = document.querySelectorAll('a,button,.btn-primary,.btn-ghost,.exp-block,.edu-card,.award-card,.skill-cat,.contact-pill,.chip,.sp,.num-item,.ip-hero-card');
+hoverEls.forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('hovering'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('hovering'));
+});
+
+// ── Scroll progress ──
+const prog = document.getElementById('progress');
+window.addEventListener('scroll',()=>{
+  const p = window.scrollY/(document.body.scrollHeight-window.innerHeight);
+  prog.style.transform = `scaleX(${p})`;
+});
+
+// ── Reveal on scroll ──
+const revealEls = document.querySelectorAll('.reveal');
+const ro = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){ e.target.classList.add('visible'); ro.unobserve(e.target); }
+  });
+},{threshold:0.1});
+revealEls.forEach(el=>ro.observe(el));
+
+// ── Count-up animation ──
+function countUp(el, target, duration=1800){
+  let start=0, startTime=null;
+  const isFloat = target%1!==0;
+  function step(ts){
+    if(!startTime) startTime=ts;
+    const progress=Math.min((ts-startTime)/duration,1);
+    const ease = 1-Math.pow(1-progress,3);
+    const val = start + (target-start)*ease;
+    el.textContent = isFloat ? val.toFixed(1) : Math.round(val)+(el.dataset.suffix||'');
+    if(progress<1) requestAnimationFrame(step);
+    else el.textContent = target+(el.dataset.suffix||'');
+  }
+  requestAnimationFrame(step);
+}
+
+// Trigger count-up when numbers section visible
+const numBigs = document.querySelectorAll('.num-big[data-target]');
+const numObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const target = parseFloat(e.target.dataset.target);
+      countUp(e.target, target);
+      numObs.unobserve(e.target);
+    }
+  });
+},{threshold:0.3});
+numBigs.forEach(el=>numObs.observe(el));
+
+// ── Parallax on hero ──
+window.addEventListener('scroll',()=>{
+  const y = window.scrollY;
+  const heroGrid = document.querySelector('.hero-grid');
+  const heroBg   = document.querySelector('.hero-bg');
+  if(heroGrid) heroGrid.style.transform=`translateY(${y*0.3}px)`;
+  if(heroBg)   heroBg.style.transform=`translateY(${y*0.15}px)`;
+});
+
+// ── Nav active state on scroll ──
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll',()=>{
+  let current='';
+  sections.forEach(s=>{
+    if(window.scrollY >= s.offsetTop-120) current=s.id;
+  });
+  navLinks.forEach(a=>{
+    a.style.color = a.getAttribute('href')==='#'+current ? 'var(--white)' : '';
+  });
+},{passive:true});
+</script>
+</body>
+</html>
